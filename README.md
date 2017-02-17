@@ -29,10 +29,52 @@ add
 ]
 ```
 
-Example
+Example filter elements list
 ----------
 
 ```php
+
+<? $filters = \skeeks\cms\contentElementFiltersWidget\ContentElementFiltersWidget::beginWidget('filters', [
+    'only_exists_filters' => true,
+]);
+    $filters->viewFile = '@app/views/widgets/ContentElementFiltersWidget/second';
+?>
+
+    <?
+        $list = new \skeeks\cms\cmsWidgets\contentElements\ContentElementsCmsWidget([
+            'namespace'         => 'campaign',
+            'viewFile'          => '@app/views/widgets/ContentElementsCmsWidget/photos',
+        ]);
+
+        $filters->search($list->dataProvider);
+        $listContent = $list->run();
+    ?>
+
+<? \skeeks\cms\contentElementFiltersWidget\ContentElementFiltersWidget::end(); ?>
+
+```
+
+Example filter elements list
+----------
+
+```php
+
+<? $filters = \skeeks\cms\contentElementFiltersWidget\ContentElementFiltersWidget::beginWidget('filters-home', [
+    'only_exists_filters' => true,
+]);
+    $ids = \skeeks\cms\models\CmsContentElement::find()
+        ->where(['content_id' => \skeeks\cms\models\CmsContent::find()->where(['code' => 'campaign'])->one()->id])
+        ->asArray()->select('id')->indexBy('id')->all();
+
+    if ($ids)
+    {
+        $ids = array_keys($ids);
+        $filters->elementIds = $ids;
+    }
+
+    $filters->viewFile = '@app/views/widgets/ContentElementFiltersWidget/home';
+?>
+<? \skeeks\cms\contentElementFiltersWidget\ContentElementFiltersWidget::end(); ?>
 
 ```
 
